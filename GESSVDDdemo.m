@@ -25,7 +25,6 @@ Testdata= rand(D,noOfTestData); %Testing Data/Features from modality 1
 %   'C'       :Value of hyperparameter C, Default=0.1
 %   'd'       :data in lower dimension, make sure that input d<D, Default=1,
 %   'eta'     :Used as step size for gradient, Default=0.1
-%   'eta'     :Used as step size for gradient, Default=0.1
 %   'laptype' :Used for selecting the available Laplacians, Default=1 (PCA)
 %              other options: 2=withinclass scatter,3=knn
 %   'L'       :Input custom/other Laplacian matrix
