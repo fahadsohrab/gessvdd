@@ -1,6 +1,6 @@
 % This is a sample demo code for Graph Embedded Subspace Support Vector Data Description
 % The demo code is provided for Linear case S-SVDD
-% For non-linear cases, first apply NPT.m over the data and then use the output Phi and Phi_t as train and test data in ssvddtrain() and ssvddtest()
+% For non-linear cases, first apply NPT.m over the data and then use the output Phi and Phi_t as train and test data in gessvddtrain() and gessvddtest()
 % Please contact fahad.sohrab@tuni.fi for any errors/bugs
 clc
 close all
