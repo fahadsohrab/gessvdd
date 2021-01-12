@@ -1,4 +1,4 @@
-The codes are provided without any warranty or gurantee.
+The codes are provided without any warranty or guarantee
 
 Copyright (c) 2017-2021 Fahad Sohrab, Jenni Raitoharju, Moncef Gabbouj, Alexandros Iosifidis.
 All rights reserved.
