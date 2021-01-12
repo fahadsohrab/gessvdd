@@ -1,12 +1,10 @@
 # Graph embedded subspace support vector data description
 
-This repository is for Graph Embedded Subspace Support Vector Data Description (GES-SVDD). The codes are provided as .m (matlab) files to be executed in matlab. The codes are provided without any warranty or gurantee. Download the package from [HERE](https://github.com/fahadsohrab/gessvdd/archive/main.zip),, unzip and add the folder gessvdd-main to the path in matlab. see **GESSVDDdemo.m** for exmaple usage.
-
+This repository is for Graph Embedded Subspace Support Vector Data Description (GES-SVDD). The codes are provided as .m (matlab) files to be executed in matlab. The codes are provided without any warranty or gurantee. Download the package from [HERE](https://github.com/fahadsohrab/gessvdd/archive/main.zip), unzip and add the folder gessvdd-main to the path in matlab. see **GESSVDDdemo.m** for exmaple usage.
 ```text
 Possible inputs to gessvddtrain
 The first input argument is the Training (target) data
 other options are
-
    'maxIter' :Maximim iteraions, Default=100
    'C'       :Value of hyperparameter C, Default=0.1
    'd'       :data in lower dimension, make sure that input d<D, Default=1,
