@@ -21,13 +21,15 @@ Testdata= rand(D,noOfTestData); %Testing Data/Features from modality 1
 %other options are
 %   'maxIter' :Maximim iteraions, Default=100
 %   'C'       :Value of hyperparameter C, Default=0.1
-%   'd'       :data in lower dimension, make sure that input d<D, Default=1,
+%   'd'       :Data in lower dimension, make sure that input d<D, Default=1,
 %   'eta'     :Used as step size for gradient, Default=0.1
-%   'laptype' :Used for selecting the available Laplacians, Default=1 (PCA)
-%              other options: 2=withinclass scatter,3=knn
-%   'L'       :Input custom/other Laplacian matrix
 %   'opt'     :Selection of optimisation type, Default=3 (Spectral regression based)
 %              other options: 1=Gradient Based Solution, 2=Generalized eigen value based
+%   'laptype' :Selection for laplacian type, 1 for PCA, 2 for S_w, 3 for knn, 4 for S_b
+%   'L'       :User's defined Laplacian matrix
+%   's'       :Hyperparameter for the kernel. 
+%   'kcluster':Number of clusters (S_w,S_b), Number of K-neighbors(knn),Default=5
+%   'max'     :Input 1 for maximisation, (Default=0, minimization)
 
-gessvddmodel=gessvddtrain(Traindata,'C',0.1,'d',4,'maxIter',10,'opt',3);
+gessvddmodel=gessvddtrain(Traindata,'C',0.1,'d',4,'maxIter',10,'opt',2,'laptype',4,'max',1);
 [predicted_labels,accuracy,sensitivity,specificity]=gessvddtest(Testdata,testlabels,gessvddmodel);
