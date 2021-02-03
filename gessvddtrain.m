@@ -5,13 +5,21 @@ function [gessvdd]=gessvddtrain(Traindata,varargin)
 %    Traindata = Contains training data from a single (target) class for training a model.
 %   'maxIter' :Maximim iteraions, Default=100
 %   'C'       :Value of hyperparameter C, Default=0.1
-%   'd'       :data in lower dimension, make sure that input d<D, Default=1,
+%   'd'       :Data in lower dimension, make sure that input d<D, Default=1,
 %   'eta'     :Used as step size for gradient, Default=0.1
+%   'opt'     :Selection of optimisation type, Default=3 (Spectral regression based)
+%              other options: 1=Gradient Based Solution, 2=Generalized eigen value based
+%   'laptype' :Selection for laplacian type, 1 for PCA, 2 for S_w, 3 for knn, 4 for S_b
+%   'L'       :User's defined Laplacian matrix
+%   's'       :Hyperparameter for the kernel. 
+%   'kcluster':Number of clusters (S_w,S_b), Number of K-neighbors(knn),Default=5
+%   'max'     :Input 1 for maximisation, (Default=0, minimization)
 %
 % Output      :gessvdd.modelparam = Trained model (for every iteration)
 %             :gessvdd.Q= Projection matrix (after every iteration)
+%             :gessvdd.npt=non-linear train data information, used for testing data
 %Example
-%essvddmodel=gessvddtrain(Traindata,'C',0.12,'d',2,'opt',2);
+%essvddmodel=gessvddtrain(Traindata,'C',0.12,'d',2,'opt',2,'laptype',4);
 
 p = inputParser;
 defaultVal_maxIter = 100;
@@ -22,6 +30,8 @@ defaultVal_opt=3;
 defaultVal_laptype=1;
 defaultVal_L=1;
 defaultVal_s=0.001;
+defaultVal_cluster=5;
+defaultVal_max=0;
 
 addParameter(p,'maxIter',defaultVal_maxIter)
 addParameter(p,'C',defaultVal_Cval)
@@ -31,6 +41,8 @@ addParameter(p,'opt',defaultVal_opt)
 addParameter(p,'laptype',defaultVal_laptype)
 addParameter(p,'L',defaultVal_L)
 addParameter(p,'s',defaultVal_s)
+addParameter(p,'kcluster',defaultVal_cluster)
+addParameter(p,'max',defaultVal_max)
 
 valid_argnames = {'l','laptype'};
 argwasspecified = ismember(valid_argnames, lower(varargin(1:2:end)));
@@ -48,11 +60,18 @@ optimisationtype=p.Results.opt;
 laptype=p.Results.laptype;
 L=p.Results.L;
 kappa=p.Results.s;
+knngmean=p.Results.kcluster;
+maxmin=p.Results.max;
+
+if(maxmin~=1)&&(maxmin~=0)
+    msg = 'Error: the argument max should be either 1 (for maximizing) or 0 (defaullt if no argument is passed) for minimising.';
+    error(msg)
+end
 
 valid_argnames = {'l'};
 argwasspecified = ismember(valid_argnames, lower(varargin(1:2:end)));
 if(argwasspecified~=1)
-    L=laplacianselect(Traindata,laptype,5);
+    L=laplacianselect(Traindata,laptype,knngmean,kappa);
 end
 
 %NPT for train Data starts here
@@ -108,9 +127,12 @@ if optimisationtype==1
         
         Grad=Sum1_data-Sum2_data-Sum3_data+Sum4_data;
         
-        Q = Q - eta*Grad;
+        if(maxmin==0)%Minimise
+        Q = Q - eta*Grad; 
+        else %Maximise
+        Q = Q + eta*Grad;  
+        end
         Q = OandN_Q(Q);
-        
         %Second Step Find Model (L is fixed here from the original space, different code for L in subspace)
         S=Q*Traindata*L*Traindata'*Q'; % Dont confuse it with S_transpose.
         SS = sqrtm(pinv(S));
@@ -135,7 +157,7 @@ elseif optimisationtype==2
         end
         St=Traindata*L*Traindata';
         S_alpha=Traindata*(diag(Alphavector)-(Alphavector*Alphavector'))*Traindata';      % V prime , each row is an observation for Cov()
-        Q =eigQ(S_alpha,St,d);
+        Q =eigQ(S_alpha,St,d,maxmin);
         %orthogonalize and normalize Q1
         Q = OandN_Q(Q);
         S=Q*Traindata*L*Traindata'*Q';
@@ -160,7 +182,7 @@ elseif optimisationtype==3
         end
         % compute the gradient and update the matrix Q
         J_sepctral=(diag(Alphavector)-(Alphavector*Alphavector'));
-        Q=SpectraleigQ(Traindata,J_sepctral,eta,d,L);
+        Q=SpectraleigQ(Traindata,J_sepctral,eta,d,L,maxmin);
         %orthogonalize and normalize Q
         Q = OandN_Q(Q);
         
