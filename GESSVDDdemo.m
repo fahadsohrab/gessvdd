@@ -31,5 +31,5 @@ Testdata= rand(D,noOfTestData); %Testing Data/Features from modality 1
 %   'kcluster':Number of clusters (S_w,S_b), Number of K-neighbors(knn),Default=5
 %   'max'     :Input 1 for maximisation, (Default=0, minimization)
 
-gessvddmodel=gessvddtrain(Traindata,'C',0.1,'d',4,'maxIter',10,'opt',2,'laptype',4,'max',1);
+gessvddmodel=gessvddtrain(Traindata,'C',0.1,'d',4,'maxIter',10,'opt',3,'laptype',4,'max',1);
 [predicted_labels,accuracy,sensitivity,specificity]=gessvddtest(Testdata,testlabels,gessvddmodel);
