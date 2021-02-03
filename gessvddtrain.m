@@ -21,6 +21,7 @@ defaultVal_eta = 0.001;
 defaultVal_opt=3;
 defaultVal_laptype=1;
 defaultVal_L=1;
+defaultVal_s=0.001;
 
 addParameter(p,'maxIter',defaultVal_maxIter)
 addParameter(p,'C',defaultVal_Cval)
@@ -29,7 +30,7 @@ addParameter(p,'eta',defaultVal_eta)
 addParameter(p,'opt',defaultVal_opt)
 addParameter(p,'laptype',defaultVal_laptype)
 addParameter(p,'L',defaultVal_L)
-
+addParameter(p,'s',defaultVal_s)
 
 valid_argnames = {'l','laptype'};
 argwasspecified = ismember(valid_argnames, lower(varargin(1:2:end)));
@@ -46,14 +47,35 @@ eta=p.Results.eta;
 optimisationtype=p.Results.opt;
 laptype=p.Results.laptype;
 L=p.Results.L;
-
-
+kappa=p.Results.s;
 
 valid_argnames = {'l'};
 argwasspecified = ismember(valid_argnames, lower(varargin(1:2:end)));
 if(argwasspecified~=1)
     L=laplacianselect(Traindata,laptype,5);
 end
+
+%NPT for train Data starts here
+%RBF kernel
+    N = size(Traindata,2);
+    Dtrain = ((sum(Traindata'.^2,2)*ones(1,N))+(sum(Traindata'.^2,2)*ones(1,N))'-(2*(Traindata'*Traindata)));
+    sigma = kappa * mean(mean(Dtrain));  A = 2.0 * sigma;
+    Ktrain = exp(-Dtrain/A);
+    %center_kernel_matrices
+    N = size(Ktrain,2);
+    Ktrain = (eye(N,N)-ones(N,N)/N) * Ktrain * (eye(N,N)-ones(N,N)/N);
+    [U,S] = eig(Ktrain);        s = diag(S);
+    s(s<10^-6) = 0.0;
+    [U, s] = sortEigVecs(U,s);  s_acc = cumsum(s)/sum(s);   S = diag(s);
+    II = find(s_acc>=0.999);
+    LL = II(1);
+    Pmat = pinv(( S(1:LL,1:LL)^(0.5) * U(:,1:LL)' )');
+    %Phi
+    Phi = Pmat*Ktrain;
+    %Saving useful variables for non-linear testing
+    npt_data={1,A,Ktrain,Phi,Traindata};%1,A,Ktrain,Phi,Traindata (1 is for NPT flag #Future)
+    Traindata=Phi;
+%NPT for train Data Ends here
 
 Trainlabel= ones(size(Traindata,2),1); %Training labels (all +1s)
 %Init start
@@ -157,4 +179,5 @@ else
 end
 gessvdd.modelparam= Modeliter;
 gessvdd.Q= Qiter;
+gessvdd.npt=npt_data;
 end
