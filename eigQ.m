@@ -1,17 +1,21 @@
 function [Q]=eigQ(S_alpha,St,d,maxmin)
 [evcs, evls] = eig(S_alpha,St,'qz');
 if(maxmin==0)%Minimise
-    sort_type = 'ascend';
+    factor=+1;
 else %Maximise
-    sort_type = 'descend';
+    factor =-1;
 end
 %check eigenvalues and eigenvectors
 evls = diag(evls);     if isreal(evls)==0,    evcs = abs(evcs);  evls = abs(evls);     end
 evls(isinf(evls))=0.0; evls(isnan(evls))=0.0; evcs(isinf(evcs))=0.0; evcs(isnan(evcs))=0.0;
 %select positive and remove small ones
-evls(evls<10^-6) = 0.0;
-evls = nonzeros(evls);
-[~,I] = sort(evls,sort_type);  s_evcs = evcs(:,I);
+% evls(evls<10^-6) = 0.0;
+index = evls<10^-6;
+evls(index)=[];
+evcs(:,index)=[];
+[~, index] = sort(factor*evls);
+evls = evls(index); %Just for future debugging
+s_evcs = evcs(:,index);
 if d<=size(s_evcs,1)
     Q = s_evcs(:,1:d)';
 else
