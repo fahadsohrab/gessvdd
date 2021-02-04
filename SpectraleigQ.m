@@ -1,5 +1,5 @@
 function [Q]=SpectraleigQ(Traindata,J_sepctral,eta,d,L,maxmin)
-L=L+(0.0001.*ones(size(L)));%Regularization
+L=L+(0.0001.*eyes(size(L)));%Regularization
 [evcs, evls] = eig(J_sepctral,L);
 
 if(maxmin==0)%Minimise
