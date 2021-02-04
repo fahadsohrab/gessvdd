@@ -27,7 +27,6 @@ If you use any part of this repository in younr implementation, consider citing 
 
   @ARTICLE{gessvdd,
   author={F. {Sohrab} and J. {Raitoharju} and A. {Iosifidis} and M. {Gabbouj}},
-  journal={TBD}, 
   title={Graph Embedded Subspace Support Vector Data Description}, 
   year={2021},
   }
