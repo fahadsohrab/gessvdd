@@ -23,7 +23,7 @@ gessvddmodel=gessvddtrain(Traindata,'C',0.12,'d',2,'eta',0.02);
 
 Please contact fahad.sohrab@tuni.fi for any issues.
 # Citation
-If you use any part of this repository in younr implementation, consider citing the following paper.
+If you use any part of this repository in younr implementation, consider citing the following papers.
 
   @ARTICLE{gessvdd,
   author={F. {Sohrab} and J. {Raitoharju} and A. {Iosifidis} and M. {Gabbouj}},
