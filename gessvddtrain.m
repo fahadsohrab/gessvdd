@@ -81,7 +81,6 @@ end
     sigma = kappa * mean(mean(Dtrain));  A = 2.0 * sigma;
     Ktrain = exp(-Dtrain/A);
     %center_kernel_matrices
-    N = size(Ktrain,2);
     Ktrain = (eye(N,N)-ones(N,N)/N) * Ktrain * (eye(N,N)-ones(N,N)/N);
     [U,S] = eig(Ktrain);        s = diag(S);
     s(s<10^-6) = 0.0;
@@ -108,14 +107,8 @@ Model = svmtrain(Trainlabel, reducedData', ['-s ',num2str(5),' -t 0 -c ',num2str
 if optimisationtype==1
     disp('Gradient Based GES-SVDD running...')
     for ii=1:maxIter
-        %First Step COmpute Q
-        %Get the alphas for data
-        Alphaindex=Model.sv_indices; %Indices where alpha is non-zero
-        AlphaValue=Model.sv_coef; %values of Alpha
-        Alphavector=zeros(size(reducedData,2),1); %Generate a vectror of zeros
-        for qq=1:size(Alphaindex,1)
-            Alphavector(Alphaindex(qq))=AlphaValue(qq);
-        end
+        %Get the alphas
+        Alphavector=fetchalpha(Model,N);
         S_transpose=Q*Traindata*L'*Traindata'*Q';
         V=pinv(S_transpose);
         CovX=Traindata*L'*Traindata';
@@ -124,7 +117,6 @@ if optimisationtype==1
         Sum2_data= 2*V*Q*(Traindata*(Alphavector*Alphavector')*Traindata');
         Sum3_data=Sum1_data*Q'*V*Q*CovX;
         Sum4_data=Sum2_data*Q'*V*Q*CovX;
-        
         Grad=Sum1_data-Sum2_data-Sum3_data+Sum4_data;
         
         if(maxmin==0)%Minimise
@@ -133,15 +125,13 @@ if optimisationtype==1
         Q = Q + eta*Grad;  
         end
         Q = OandN_Q(Q);
-        %Second Step Find Model (L is fixed here from the original space, different code for L in subspace)
-        S=Q*Traindata*L*Traindata'*Q'; % Dont confuse it with S_transpose.
+                
+        S=Q*Traindata*L*Traindata'*Q'; 
         SS = sqrtm(pinv(S));
         reducedKtrain=SS*Q*Traindata;
-        Model = svmtrain(Trainlabel, reducedKtrain', ['-s ',num2str(5),' -t 0 -c ',num2str(Cval)]); %type 5 is svdd
-        %Save for later testing
+        Model = svmtrain(Trainlabel, reducedKtrain', ['-s ',num2str(5),' -t 0 -c ',num2str(Cval)]);
         Qiter{ii}=SS*Q;
-        Modeliter{ii}=Model;
-        
+        Modeliter{ii}=Model; 
     end
     disp('...All Iterations Completed')
     
@@ -149,22 +139,17 @@ elseif optimisationtype==2
     disp('Generalized eigen value based GES-SVDD running...')
     for ii=1:maxIter
         %Get the alphas
-        Alphaindex=Model.sv_indices; %Indices where alpha is non-zero
-        AlphaValue=Model.sv_coef; %values of Alpha
-        Alphavector=zeros(size(reducedData,2),1); %Generate a vectror of zeros
-        for qq=1:size(Alphaindex,1)
-            Alphavector(Alphaindex(qq))=AlphaValue(qq);
-        end
+        Alphavector=fetchalpha(Model,N);
         St=Traindata*L*Traindata';
-        S_alpha=Traindata*(diag(Alphavector)-(Alphavector*Alphavector'))*Traindata';      % V prime , each row is an observation for Cov()
+        S_alpha=Traindata*(diag(Alphavector)-(Alphavector*Alphavector'))*Traindata';
         Q =eigQ(S_alpha,St,d,maxmin);
         %orthogonalize and normalize Q1
         Q = OandN_Q(Q);
+        
         S=Q*Traindata*L*Traindata'*Q';
-        SS = sqrtm(pinv(S)); % e inverse sqrroot
+        SS = sqrtm(pinv(S)); 
         reducedData=SS*Q*Traindata;
         Model = svmtrain(Trainlabel, reducedData', ['-s ',num2str(5),' -t 0 -c ',num2str(Cval)]);
-        %Save for later testing
         Qiter{ii}=SS*Q;
         Modeliter{ii}=Model;
     end
@@ -173,13 +158,8 @@ elseif optimisationtype==2
 elseif optimisationtype==3
     disp('Spectral Regression based GES-SVDD running...')
     for ii=1:maxIter
-        %Get the alphas for data1
-        Alphaindex=Model.sv_indices; %Indices where alpha is non-zero
-        AlphaValue=Model.sv_coef; %values of Alpha
-        Alphavector=zeros(size(reducedData,2),1); %Generate a vectror of zeros
-        for qq=1:size(Alphaindex,1)
-            Alphavector(Alphaindex(qq))=AlphaValue(qq);
-        end
+        %Get the alphaS
+        Alphavector=fetchalpha(Model,N);
         % compute the gradient and update the matrix Q
         J_sepctral=(diag(Alphavector)-(Alphavector*Alphavector'));
         Q=SpectraleigQ(Traindata,J_sepctral,eta,d,L,maxmin);
@@ -187,10 +167,9 @@ elseif optimisationtype==3
         Q = OandN_Q(Q);
         
         S=Q*Traindata*L*Traindata'*Q';
-        SS = sqrtm(pinv(S)) ; % e inverse sqrroot
+        SS = sqrtm(pinv(S)) ;
         reducedData=SS*Q*Traindata;
         Model = svmtrain(Trainlabel, reducedData', ['-s ',num2str(5),' -t 0 -c ',num2str(Cval)]);
-        %Save for later testing
         Qiter{ii}=SS*Q;
         Modeliter{ii}=Model;
     end
