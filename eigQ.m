@@ -1,9 +1,10 @@
 function [Q]=eigQ(S_alpha,St,d,maxmin)
+St=St+(0.0001.*ones(size(St)));%Regularization
 [evcs, evls] = eig(S_alpha,St,'qz');
-if(maxmin==0)%Minimise
+if(maxmin==0)%Ascending
     factor=+1;
 else %Maximise
-    factor =-1;
+    factor =-1;%Descending
 end
 %check eigenvalues and eigenvectors
 evls = diag(evls);     if isreal(evls)==0,    evcs = abs(evcs);  evls = abs(evls);     end
