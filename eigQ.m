@@ -1,5 +1,5 @@
 function [Q]=eigQ(S_alpha,St,d,maxmin)
-St=St+(0.0001.*ones(size(St)));%Regularization
+St=St+(0.0001.*eyes(size(St)));%Regularization
 [evcs, evls] = eig(S_alpha,St,'qz');
 if(maxmin==0)%Ascending
     factor=+1;
