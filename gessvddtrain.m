@@ -142,8 +142,8 @@ elseif optimisationtype==2
         Alphavector=fetchalpha(Model,N);
         St=Traindata*L*Traindata';
         S_alpha=Traindata*(diag(Alphavector)-(Alphavector*Alphavector'))*Traindata';
-        Q =eigQ(S_alpha,St,d,maxmin);
-        %orthogonalize and normalize Q1
+        Q =eigQ(S_alpha,St,d,eta,maxmin);
+        %orthogonalize and normalize 
         Q = OandN_Q(Q);
         
         S=Q*Traindata*L*Traindata'*Q';
