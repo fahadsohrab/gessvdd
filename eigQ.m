@@ -17,7 +17,7 @@ evcs(:,index)=[];
 [~, index] = sort(factor*evls);
 evls = evls(index); %Just for future debugging
 s_evcs = evcs(:,index);
-if d<=size(s_evcs,1)
+if d<=size(s_evcs,2)
     Q = s_evcs(:,1:d)';
 else
     Q = s_evcs(:,:)';
