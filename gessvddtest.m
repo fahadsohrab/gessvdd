@@ -1,4 +1,4 @@
-function varargout=gessvddtest(Testdata,testlabels,gessvddmodel)
+function varargout=gessvddtest(Testdata,testlabels,gessvddmodel,varargin)
 %ssvddtest() is a function for testing a model based on "Subspace Support
 %Vector Data Description"
 % Input
@@ -14,7 +14,7 @@ function varargout=gessvddtest(Testdata,testlabels,gessvddmodel)
 %   output argument #6 = F-Measure
 %   output argument #7 = Geometric mean i.e, sqrt(tp_rate*tn_rate)
 %Example
-%[predicted_labels,accuracy,sensitivity,specificity]=ssvddtest(Testdata,testlabels,ssvddmodel);
+%[predicted_labels,accuracy,sensitivity,specificity]=gessvddtest(Testdata,testlabels,ssvddmodel);
 
 %NPT
     disp('GES-SVDD Testing...')
@@ -31,9 +31,17 @@ function varargout=gessvddtest(Testdata,testlabels,gessvddmodel)
     Testdata = pinv(Phi')*Ktest;
 %NPT ends
 
+%Iter check for fetching model and corresponding Q
+iter_index = double(isempty(varargin));
+if(iter_index==1)
+    testiter=size(gessvddmodel.Q,2);
+else
+    testiter=varargin{1};
+end
+
 Q=gessvddmodel.Q;
-Model=gessvddmodel.modelparam{end};
-RedTestdata=Q{end}* Testdata;
+Model=gessvddmodel.modelparam{testiter};
+RedTestdata=Q{testiter}* Testdata;
 predict_label = svmpredict(testlabels, RedTestdata', Model);
 EVAL = evaluategessvdd(testlabels,predict_label);
 % accuracy =EVAL(1);
