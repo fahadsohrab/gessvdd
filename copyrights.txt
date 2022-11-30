@@ -1,12 +1,15 @@
 The codes are provided without any warranty or guarantee
 
-Copyright (c) 2017-2021 Fahad Sohrab, Jenni Raitoharju, Moncef Gabbouj, Alexandros Iosifidis.
+Copyright (c) 2017-2022 Fahad Sohrab, Jenni Raitoharju, Moncef Gabbouj, Alexandros Iosifidis.
 All rights reserved.
 
 Cite the following work(s) if any part of the provided code is used in your work.
-F. Sohrab, J. Raitoharju, A. Iosifidis and M. Gabbouj, "Ellipsoidal Subspace Support Vector Data Description," in IEEE Access, vol. 8, pp. 122013-122025, 2020, doi: 10.1109/ACCESS.2020.3007123.
 
-Sohrab, Fahad, et al. "Subspace support vector data description." 2018 24th International Conference on Pattern Recognition (ICPR). IEEE, 2018.
+Sohrab, F., Iosifidis, A., Gabbouj, M., & Raitoharju, J. (2023). Graph-embedded subspace support vector data description. Pattern Recognition, 133, 108999.
+
+Sohrab, F., Raitoharju, J., Iosifidis, A., & Gabbouj, M. (2020). Ellipsoidal subspace support vector data description. IEEE Access, 8, 122013-122025.
+
+Sohrab, F., Raitoharju, J., Gabbouj, M., & Iosifidis, A. (2018, August). Subspace support vector data description. In 2018 24th International Conference on Pattern Recognition (ICPR) (pp. 722-727). IEEE.
 
 We use libsvm-svdd-3.22 for implementation of Support Vector data description. As per Instructions of the copyright notice by LIBSVM, the following Copyright notice is included for the usage of LIBSVM-SVDD implementation. 
 
