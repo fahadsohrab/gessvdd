@@ -103,7 +103,7 @@ else
     end
     
 end
-Q = initialize_Q( D, params.d, Traindata);
+Q = initialize_Q(size(Traindata,1),params.d);
 
 for ii=1:params.maxIter
     
