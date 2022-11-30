@@ -1,23 +1,25 @@
-function varargout=gessvddtest(Testdata,testlabels,gessvddmodel,varargin)
-%ssvddtest() is a function for testing a model based on "Subspace Support
-%Vector Data Description"
+function [Predictlabel,eval] = gessvddtest(Testdata,Testlabel,gessvddmodel, varargin)
+%gessvddtest() is a function for testing a model based on "Graph Embedded Subspace Support Vector Data Description"
 % Input
 %   Testdata  = Contains testing data from
 %   Testlabels= contains original test lables
 %   ssvddmodel= contains the output obtained from "ssvddmodel=ssvddtrain(Traindata,varargin)"
 % Output
-%   output argument #1 = predicted labels
-%   output argument #2 = accuracy
-%   output argument #3 = sensitivity (True Positive Rate)
-%   output argument #4 = specificity (True Negative Rate)
-%   output argument #5 = precision
-%   output argument #6 = F-Measure
-%   output argument #7 = Geometric mean i.e, sqrt(tp_rate*tn_rate)
-%Example
-%[predicted_labels,accuracy,sensitivity,specificity]=gessvddtest(Testdata,testlabels,ssvddmodel);
+%   output argument #1      = predicted labels
+%   output argument #2      = eval (evaluate predictions)
+%           eval.tp_rate= sensitivity (True Positive Rate)
+%           eval.tn_rate= specificity (True Negative Rate)
+%           eval.accuracy= accuracy
+%           eval.precision= precision
+%           eval.f_measure=  F-Measure
+%           eval.gmean= Geometric mean i.e, sqrt(tp_rate*tn_rate)
+%
+%NOTE regarding varargin: The model performance can be evaluated at a
+%certain iteration by providing a cerytain number. If its not provided, the last iteration value is used as default. 
 
-%NPT
-    disp('GES-SVDD Testing...')
+nptflag=gessvddmodel.npt{1};
+if nptflag==1
+    disp('NPT based non-linear gessvdd testing...')
     A=gessvddmodel.npt{2};
     Ktrain=gessvddmodel.npt{3};
     Phi=gessvddmodel.npt{4};
@@ -29,7 +31,9 @@ function varargout=gessvddtest(Testdata,testlabels,gessvddmodel,varargin)
     M = size(Ktest,2);
     Ktest = (eye(N,N)-ones(N,N)/N) * (Ktest - (Ktrain*ones(N,1)/N)*ones(1,M));
     Testdata = pinv(Phi')*Ktest;
-%NPT ends
+else
+    disp('Linear gessvdd testing...')
+end
 
 %Iter check for fetching model and corresponding Q
 iter_index = double(isempty(varargin));
@@ -39,19 +43,14 @@ else
     testiter=varargin{1};
 end
 
-Q=gessvddmodel.Q;
-Model=gessvddmodel.modelparam{testiter};
-RedTestdata=Q{testiter}* Testdata;
-predict_label = svmpredict(testlabels, RedTestdata', Model);
-EVAL = evaluategessvdd(testlabels,predict_label);
-% accuracy =EVAL(1);
-% sensitivity =EVAL(2);
-% specificity =EVAL(3);
-% precision =EVAL(4);
-% f_measure =EVAL(5);
-% gmean=EVAL(6);
-varargout{1}=predict_label;
-for jj=2:7
-    varargout{jj}=EVAL(jj-1);
+Q = gessvddmodel.Q;
+if size(Q,2) < testiter
+    Predictlabel = [];
+else
+    model = gessvddmodel.modelparam{testiter};
+    RedTestdata=Q{testiter}* Testdata;
+    Predictlabel = svmpredict(Testlabel, RedTestdata', model);
 end
+eval = evaluate_prediction(Testlabel,Predictlabel);
+
 end
