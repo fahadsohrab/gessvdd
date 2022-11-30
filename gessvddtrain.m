@@ -39,7 +39,7 @@ for i = 1:length(missingIdx)
 end
 
 if strcmp(params.variant, 'basic') && strcmp( params.solution, 'spectral_regression')
-error('Spectral regression solution is not available for basic S-SVDD')
+    error('Spectral regression solution is not available for basic S-SVDD')
 end
 
 
@@ -56,19 +56,17 @@ if params.npt==1
     %RBF kernel
     N = size(Traindata,2);
     Dtrain = ((sum(Traindata'.^2,2)*ones(1,N))+(sum(Traindata'.^2,2)*ones(1,N))'-(2*(Traindata'*Traindata)));
-    sigma = params.s  * mean(mean(Dtrain));  A = 2.0 * sigma;
+    sigma2 = params.s * mean(mean(Dtrain));  A = 2.0 * sigma2;
     Ktrain_exp = exp(-Dtrain/A);
-    %center_kernel_matrices
+    % % center_kernel_matrices
     N = size(Ktrain_exp,2);
     Ktrain = (eye(N,N)-ones(N,N)/N) * Ktrain_exp * (eye(N,N)-ones(N,N)/N);
-    [U,S] = eig(Ktrain);        s = diag(S);
-    s(s<10^-6) = 0.0;
-    [U, s] = sortEigVecs(U,s);  s_acc = cumsum(s)/sum(s);   S = diag(s);
-    II = find(s_acc>=0.999);
+    [evcs,evls] = eig(Ktrain);        evls = diag(evls);
+    [U, s] = sortEigVecs(evcs,evls);  S = diag(s);
+    s_acc = cumsum(s)/sum(s);
+    II = find(s_acc>=0.99);
     LL = II(1);
-    Pmat = pinv(( S(1:LL,1:LL)^(0.5) * U(:,1:LL)' )');
-    %Phi
-    Phi = Pmat*Ktrain;
+    Phi = ( S(1:LL,1:LL)^(0.5) * U(:,1:LL)' );
     %Saving useful variables for non-linear testing
     npt_data={1,A,Ktrain_exp,Phi,Traindata};%1,A,Ktrain,Phi,Traindata (1 is for flag)
     Traindata=Phi;
