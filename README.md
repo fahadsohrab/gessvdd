@@ -18,6 +18,7 @@ params.minmax   :Possible options are 'max', 'min' ,Default='min'.
 params.maxIter  :Maximim iteraions of the algorithm. Default=10.
 ```
 # Example
+```text
 %% Input parameters setting example
 params.variant = 'pca';
 params.solution = 'gradient';
@@ -32,7 +33,7 @@ params.maxIter = 10;
 %% Training and Testing
 gessvddmodel=gessvddtrain(Traindata,params);
 [predicted_labels,eval]=gessvddtest(Testdata,testlabels,gessvddmodel);
-
+```
 Please contact fahad.sohrab@tuni.fi for any issues.
 # Citation
 If you use any part of this repository in younr implementation, consider citing the following papers.
