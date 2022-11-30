@@ -10,7 +10,7 @@ function gessvdd = gessvddtrain(Traindata,params)
 % params.eta      :Needed only with gradient solution, Used as step size for gradient, Default=0.01.
 % params.npt      :Used for selecting non-linear data description. Possible options are 1 (for non-linear data description), default=1 (linear data description)
 % params.s        :Hyperparameter for the kernel, used in non-linear data description. Default=10.
-% params.K:       :Number of clusters (S_w,S_b), Number of K-neighbors(knn),Default=5.
+% params.K        :Number of clusters (S_w,S_b), Number of K-neighbors(knn),Default=5.
 % params.minmax   :Possible options are 'max', 'min' ,Default='min'.
 % params.maxIter  :Maximim iteraions of the algorithm. Default=10.
 %
@@ -39,19 +39,16 @@ for i = 1:length(missingIdx)
 end
 
 if strcmp(params.variant, 'basic') && strcmp( params.solution, 'spectral_regression')
-    disp( 'Spectral regression solution is not available for basic S-SVDD');
-    return;
+error('Spectral regression solution is not available for basic S-SVDD')
 end
 
 
 if params.d > size(Traindata,1)
-    disp( 'd must be <= D');
-    return;
+    error('d must be <= D')
 end
 
 if params.C < 1/size(Traindata,2)
-    disp( 'C should be larger than 1/N');
-    return;
+    error( 'C should be larger than 1/N');
 end
 
 if params.npt==1
