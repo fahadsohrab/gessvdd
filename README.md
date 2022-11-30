@@ -3,33 +3,49 @@
 This repository is for Graph Embedded Subspace Support Vector Data Description (GES-SVDD). The codes are provided as .m (matlab) files to be executed in matlab. The codes are provided without any warranty or gurantee. Download the package from [HERE](https://github.com/fahadsohrab/gessvdd/archive/main.zip), unzip and add the folder gessvdd-main to the path in matlab. see **GESSVDDdemo.m** for exmaple usage.
 ```text
 Possible inputs to gessvddtrain
-The first input argument is the Training (target) data
-other options are
-   'maxIter' :Maximim iteraions, Default=100
-   'C'       :Value of hyperparameter C, Default=0.1
-   'd'       :Data in lower dimension, make sure that input d<D, Default=1,
-   'eta'     :Used as step size for gradient, Default=0.1
-   'opt'     :Selection of optimisation type, Default=3 (Spectral regression based)
-              other options: 1=Gradient Based Solution, 2=Generalized eigen value based
-   'laptype' :Selection for laplacian type, 1 for PCA, 2 for S_w, 3 for knn, 4 for S_b
-   'L'       :User's defined Laplacian matrix
-   's'       :Hyperparameter for the kernel. 
-   'kcluster':Number of clusters (S_w,S_b), Number of K-neighbors(knn),Default=5
-   'max'     :Input 1 for maximisation, (Default=0, minimization)
+The first input argument is the Traindata (target training data)
+other inputs/options are
+
+params.variant  :Possible options are 'basic', 'ellipsoid', 'pca', 'kNN', 'Sw', 'Sb'. Default= 'pca'
+params.solution :Possible options are 'gradient', 'eig', 'spectral_regression' Default='gradient'
+params.C        :Value of hyperparameter C, Default=0.1.
+params.d        :Data in lower dimension, make sure that params.dim<D, Default=2.
+params.eta      :Needed only with gradient solution, Used as step size for gradient, Default=0.01.
+params.npt      :Used for selecting non-linear data description. Possible options are 1 (for non-linear data description), default=1 (linear data description)
+params.s        :Hyperparameter for the kernel, used in non-linear data description. Default=10.
+params.K:       :Number of clusters (S_w,S_b), Number of K-neighbors(knn),Default=5.
+params.minmax   :Possible options are 'max', 'min' ,Default='min'.
+params.maxIter  :Maximim iteraions of the algorithm. Default=10.
 ```
 # Example
-gessvddmodel=gessvddtrain(Traindata,'C',0.12,'d',2,'eta',0.02);
-[predicted_labels,accuracy,sensitivity,specificity]=gessvddtest(Testdata,testlabels,gessvddmodel); 
+%% Input parameters setting example
+params.variant = 'pca';
+params.solution = 'gradient';
+params.minmax = 'max';
+params.maxIter = 5;
+params.Cval=0.5;
+params.d=2;
+params.eta=0.2;
+params.npt=1;
+params.s=5;
+params.maxIter = 10;
+%% Training and Testing
+gessvddmodel=gessvddtrain(Traindata,params);
+[predicted_labels,eval]=gessvddtest(Testdata,testlabels,gessvddmodel);
 
 Please contact fahad.sohrab@tuni.fi for any issues.
 # Citation
 If you use any part of this repository in younr implementation, consider citing the following papers.
 
-  @ARTICLE{gessvdd,
-  author={F. {Sohrab} and J. {Raitoharju} and A. {Iosifidis} and M. {Gabbouj}},
-  title={Graph Embedded Subspace Support Vector Data Description}, 
-  year={2021},
-  }
+@article{sohrab2023graph,
+  title={Graph-embedded subspace support vector data description},
+  author={Sohrab, Fahad and Iosifidis, Alexandros and Gabbouj, Moncef and Raitoharju, Jenni},
+  journal={Pattern Recognition},
+  volume={133},
+  pages={108999},
+  year={2023},
+  publisher={Elsevier}
+}
   
 @inproceedings{sohrab2018subspace,
   title={Subspace support vector data description},
