@@ -3,25 +3,8 @@
 This repository is for Graph Embedded Subspace Support Vector Data Description (GESSVDD). The codes are provided as .m (matlab) files to be executed in matlab. The codes are provided without any warranty or gurantee. Download the package from [HERE](https://github.com/fahadsohrab/gessvdd/archive/main.zip), unzip and add the folder gessvdd-main to the path in matlab. see **GESSVDDdemo.m** for exmaple usage.
 
 # Requirements
-MS-SVDD requires *LIBSVM for SVDD*. Before executing the codes, make sure that correct version (3.22) of *LIBSVM for SVDD* is installed already. In order to install *LIBSVM for SVDD*  Please download zip file from [HERE](https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/svdd/libsvm-svdd-3.22.zip), put sources into libsvm-3.22 available [HERE](https://www.csie.ntu.edu.tw/~cjlin/libsvm/oldfiles/libsvm-3.22.zip), and make the code. For more details about how to install libsvm, please refer [HERE](https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/#libsvm_for_svdd_and_finding_the_smallest_sphere_containing_all_data)
+GESSVDD requires *LIBSVM for SVDD*. Before executing the codes, make sure that correct version (3.22) of *LIBSVM for SVDD* is installed already. In order to install *LIBSVM for SVDD*  Please download zip file from [HERE](https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/svdd/libsvm-svdd-3.22.zip), put sources into libsvm-3.22 available [HERE](https://www.csie.ntu.edu.tw/~cjlin/libsvm/oldfiles/libsvm-3.22.zip), and make the code. For more details about how to install libsvm, please refer [HERE](https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/#libsvm_for_svdd_and_finding_the_smallest_sphere_containing_all_data)
 
-# Example
-```text
-Possible inputs to gessvddtrain
-The first input argument is the Traindata (target training data)
-other inputs/options are
-
-params.variant  :Possible options are 'basic', 'ellipsoid', 'pca', 'kNN', 'Sw', 'Sb'. Default= 'pca'
-params.solution :Possible options are 'gradient', 'eig', 'spectral_regression' Default='gradient'
-params.C        :Value of hyperparameter C, Default=0.1.
-params.d        :Data in lower dimension, make sure that params.dim<D, Default=2.
-params.eta      :Needed only with gradient solution, Used as step size for gradient, Default=0.01.
-params.npt      :Used for selecting non-linear data description. Possible options are 1 (for non-linear data description), default=1 (linear data description)
-params.s        :Hyperparameter for the kernel, used in non-linear data description. Default=10.
-params.K:       :Number of clusters (S_w,S_b), Number of K-neighbors(knn),Default=5.
-params.minmax   :Possible options are 'max', 'min' ,Default='min'.
-params.maxIter  :Maximim iteraions of the algorithm. Default=10.
-```
 # Example
 ```text
 %% Input parameters setting example
