@@ -38,7 +38,7 @@ params.maxIter = 10;
 gessvddmodel=gessvddtrain(Traindata,params);
 [predicted_labels,eval]=gessvddtest(Testdata,testlabels,gessvddmodel);
 ```
-Please contact fahad.sohrab@tuni.fi for any issues.
+Please contact fahad.sohrab@tuni.fi for any errors, bugs or issues.
 # Citation
 If you use any part of this repository in younr implementation, consider citing the following papers.
 
