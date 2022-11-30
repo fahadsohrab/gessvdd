@@ -48,6 +48,16 @@ If you use any part of this repository in younr implementation, consider citing 
   publisher={Elsevier}
 }
   
+@article{sohrab2020ellipsoidal,
+  title={Ellipsoidal subspace support vector data description},
+  author={Sohrab, Fahad and Raitoharju, Jenni and Iosifidis, Alexandros and Gabbouj, Moncef},
+  journal={IEEE Access},
+  volume={8},
+  pages={122013--122025},
+  year={2020},
+  publisher={IEEE}
+}
+
 @inproceedings{sohrab2018subspace,
   title={Subspace support vector data description},
   author={Sohrab, Fahad and Raitoharju, Jenni and Gabbouj, Moncef and Iosifidis, Alexandros},
@@ -56,16 +66,3 @@ If you use any part of this repository in younr implementation, consider citing 
   year={2018},
   organization={IEEE}
 }
-
-@ARTICLE{essvdd2020sohrab,
-  author={F. {Sohrab} and J. {Raitoharju} and A. {Iosifidis} and M. {Gabbouj}},
-  journal={IEEE Access}, 
-  title={Ellipsoidal Subspace Support Vector Data Description}, 
-  year={2020},
-  volume={8},
-  pages={122013-122025},
-  doi={10.1109/ACCESS.2020.3007123}}
-  
-
-  
-  
